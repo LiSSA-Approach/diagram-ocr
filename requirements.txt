@@ -1,0 +1,7 @@
+# Webserver
+flask==2.1.2
+flask_restx==0.5.1
+waitress==2.1.1
+
+pytesseract
+opencv-python
