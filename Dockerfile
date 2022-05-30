@@ -1,7 +1,7 @@
 FROM python:3.8
 WORKDIR /usr/local/src/ocr
 
-RUN apt-get update && apt-get install tesseract-ocr -y
+RUN apt-get update && apt-get install ffmpeg libsm6 libxext6 tesseract-ocr -y
 
 COPY requirements.txt .
 RUN python -m pip install -r requirements.txt
