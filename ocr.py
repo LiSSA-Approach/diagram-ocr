@@ -36,9 +36,12 @@ class OCR:
         y2 = min(y2, original_height - 2)
 
         image = original_image[y1:y2, x1:x2]
-        cv2.imwrite(f"./image{self._ctr}.png", image)
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        # image = cv2.blur(image, (3, 3))
+        # image = cv2.Canny(image, 100, 200)
+        # cv2.imwrite(f"./image{self._ctr}.png", image)
         self._ctr += 1
-        d = pytesseract.image_to_data(image, lang="eng", output_type=pytesseract.Output.DICT)
+        d = pytesseract.image_to_data(image, output_type=pytesseract.Output.DICT)
         n_boxes = len(d['level'])
         result_data = []
         for i in range(n_boxes):
@@ -46,11 +49,12 @@ class OCR:
                 continue
             (x, y, w, h) = (d['left'][i], d['top'][i], d['width'][i], d['height'][i])
             entry = {
-                "x": x,
-                "y": y,
+                "x": x + x1,
+                "y": y + y1,
                 "w": w,
                 "h": h,
-                "text": d['text'][i]
+                "text": d['text'][i],
+                "confidence": d['conf'][i]
             }
             if len(entry["text"].strip()) == 0:
                 continue
