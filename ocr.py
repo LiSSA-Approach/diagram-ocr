@@ -36,9 +36,16 @@ class OCR:
         y2 = min(y2, original_height - 2)
 
         image = original_image[y1:y2, x1:x2]
+
+        normalized = cv2.normalize(image, None, alpha=0, beta=1.2, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
+        normalized = np.clip(normalized, 0, 1)
+        image = (255 * normalized).astype(np.uint8)
+
         image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
         # image = cv2.blur(image, (3, 3))
         # image = cv2.Canny(image, 100, 200)
+
         # cv2.imwrite(f"./image{self._ctr}.png", image)
         self._ctr += 1
         d = pytesseract.image_to_data(image, output_type=pytesseract.Output.DICT)
