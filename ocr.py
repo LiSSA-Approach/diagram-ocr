@@ -2,7 +2,7 @@ from typing import List
 
 import numpy as np
 import cv2
-import pytesseract
+import easyocr
 
 
 class OCR:
@@ -48,20 +48,24 @@ class OCR:
 
         # cv2.imwrite(f"./image{self._ctr}.png", image)
         self._ctr += 1
-        d = pytesseract.image_to_data(image, output_type=pytesseract.Output.DICT)
-        n_boxes = len(d['level'])
+
+        reader = easyocr.Reader(['en'])
+        result = reader.readtext(image)
+
         result_data = []
-        for i in range(n_boxes):
-            if d['conf'][i] == '-1':
-                continue
-            (x, y, w, h) = (d['left'][i], d['top'][i], d['width'][i], d['height'][i])
+        for (bbox, text, confidence) in result:
+            (tl, tr, _, bl) = bbox
+            tl = (int(tl[0]), int(tl[1]))
+            tr = (int(tr[0]), int(tr[1]))
+            bl = (int(bl[0]), int(bl[1]))
+            (x, y, w, h) = (tl[0], tl[1], tr[0] - tl[0], bl[1] - tl[1])
             entry = {
                 "x": x + x1,
                 "y": y + y1,
                 "w": w,
                 "h": h,
-                "text": d['text'][i],
-                "confidence": d['conf'][i]
+                "text": text,
+                "confidence": float(confidence)
             }
             if len(entry["text"].strip()) == 0:
                 continue
