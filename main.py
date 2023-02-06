@@ -1,9 +1,9 @@
-from typing import Dict, Any, List, Optional, Union
+from typing import List, Union
 
 from flask import Flask, Blueprint, make_response, abort
 from flask_restx import Resource, Api
-
 from werkzeug.datastructures import FileStorage
+
 from ocr import OCR
 
 flask = Flask("DiagramOCR")
@@ -58,8 +58,8 @@ if __name__ == '__main__':
 
     flask.register_blueprint(blueprint)
     # Debug
-    flask.run(host="0.0.0.0", port=5005, debug=False)
+    # flask.run(host="0.0.0.0", port=5005, debug=False)
 
     # Production
-    # from waitress import serve
-    # serve(flask, host="0.0.0.0", port=5005)
+    from waitress import serve
+    serve(flask, host="0.0.0.0", port=5005)
