@@ -15,7 +15,7 @@ on:
       - v*
 
 env:
-  IMAGE_NAME: tesseract-diagram-ocr
+  IMAGE_NAME: diagram-ocr
 
 jobs:
   push:
